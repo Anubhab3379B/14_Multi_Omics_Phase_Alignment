@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "multi-omics-phase-alignment"
+version = "0.1.0"
+description = "Research scaffold for shared temporal phase alignment across RNA, ATAC, and protein modalities."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "scikit-learn>=1.3",
+  "PyYAML>=6.0"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+data = [
+  "requests>=2.31",
+  "tqdm>=4.65",
