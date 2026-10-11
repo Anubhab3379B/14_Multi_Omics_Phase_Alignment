@@ -1,0 +1,6 @@
+# Data download and processing dependencies
+requests>=2.31
+tqdm>=4.65
+anndata>=0.10
+scanpy>=1.9
+mudata>=0.2
