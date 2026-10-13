@@ -1,0 +1,20 @@
+﻿# Data paths are intentionally local placeholders.
+raw_dir: data/raw
+interim_dir: data/interim
+processed_dir: data/processed
+
+# Synthetic defaults keep the foundation runnable before real datasets arrive.
+modalities:
+  rna:
+    feature_count: 128
+  atac:
+    feature_count: 96
+  protein:
+    feature_count: 48
+
+time:
+  field: time
+  synthetic_samples: 120
+
+# Phase 2 file-backed format. Paths are examples, not committed datasets.
+file_backed:
