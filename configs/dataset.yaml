@@ -18,3 +18,11 @@ time:
 
 # Phase 2 file-backed format. Paths are examples, not committed datasets.
 file_backed:
+  sample_id_column: sample_id
+  time_column: time
+  phase_column: true_phase
+  metadata_csv: data/raw/metadata.csv
+  rna_csv: data/raw/rna.csv
+  atac_csv: data/raw/atac.csv
+  protein_csv: data/raw/protein.csv
+  processed_npz: data/processed/aligned_batch.npz
