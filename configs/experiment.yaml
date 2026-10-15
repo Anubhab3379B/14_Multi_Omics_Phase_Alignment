@@ -1,0 +1,5 @@
+﻿experiment_id: smoke_synthetic_v0
+use_synthetic_data: true
+save_results: true
+results_dir: results
+notes: First end-to-end scaffold run using synthetic normalized arrays.
