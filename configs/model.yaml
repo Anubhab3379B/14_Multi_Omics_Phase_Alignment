@@ -1,0 +1,9 @@
+﻿latent_dim: 16
+hidden_dim: 32
+random_seed: 7
+loss_weights:
+  reconstruction: 1.0
+  alignment: 0.2
+  temporal: 0.1
+phase_detection:
+  n_phases: 4
