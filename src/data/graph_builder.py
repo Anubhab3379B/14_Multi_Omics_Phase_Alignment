@@ -18,3 +18,23 @@ logger = logging.getLogger(__name__)
 # STRING API base URL (v12)
 _STRING_API = "https://string-db.org/api/json/network"
 
+# Default STRING combined score threshold (400 = medium confidence)
+DEFAULT_STRING_THRESHOLD = 400
+
+
+# ---------------------------------------------------------------------------
+# STRING-based graph
+# ---------------------------------------------------------------------------
+
+def fetch_string_interactions(
+    gene_list: list[str],
+    species: int = 9606,
+    threshold: int = DEFAULT_STRING_THRESHOLD,
+    cache_path: Optional[str | Path] = None,
+) -> pd.DataFrame:
+    """Fetch protein-protein interactions from STRING API.
+
+    Parameters
+    ----------
+    gene_list : list[str]
+        List of gene symbols (e.g., ["TP53", "BRCA1", "EGFR"]).
