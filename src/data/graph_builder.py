@@ -38,3 +38,23 @@ def fetch_string_interactions(
     ----------
     gene_list : list[str]
         List of gene symbols (e.g., ["TP53", "BRCA1", "EGFR"]).
+    species : int
+        NCBI taxonomy ID. 9606 = human, 10090 = mouse.
+    threshold : int
+        Minimum combined interaction score (0–1000). 400 = medium confidence.
+    cache_path : str or Path or None
+        If provided, cache the API response to this path (avoids repeat calls).
+
+    Returns
+    -------
+    pandas.DataFrame
+        Columns: ``preferredName_A``, ``preferredName_B``, ``score``.
+    """
+    import pandas as pd
+    import requests
+
+    if cache_path is not None:
+        cache_path = Path(cache_path)
+        if cache_path.exists():
+            logger.info("Loading STRING interactions from cache: %s", cache_path)
+            return pd.read_csv(cache_path)
