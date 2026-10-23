@@ -58,3 +58,23 @@ def fetch_string_interactions(
         if cache_path.exists():
             logger.info("Loading STRING interactions from cache: %s", cache_path)
             return pd.read_csv(cache_path)
+
+    logger.info(
+        "Fetching STRING interactions for %d genes (species=%d, threshold=%d)",
+        len(gene_list), species, threshold,
+    )
+
+    # STRING API: POST with gene identifiers
+    params = {
+        "identifiers": "\r".join(gene_list),
+        "species": species,
+        "required_score": threshold,
+        "caller_identity": "mopa_framework",
+    }
+
+    resp = requests.post(_STRING_API, data=params, timeout=120)
+    resp.raise_for_status()
+
+    data = resp.json()
+    if not data:
+        logger.warning("STRING returned 0 interactions for the provided gene list.")
