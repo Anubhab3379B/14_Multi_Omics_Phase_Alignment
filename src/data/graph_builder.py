@@ -78,3 +78,23 @@ def fetch_string_interactions(
     data = resp.json()
     if not data:
         logger.warning("STRING returned 0 interactions for the provided gene list.")
+        return pd.DataFrame(columns=["preferredName_A", "preferredName_B", "score"])
+
+    df = pd.DataFrame(data)
+    logger.info("  STRING returned %d interactions", len(df))
+
+    if cache_path is not None:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        df.to_csv(cache_path, index=False)
+        logger.info("  Cached to %s", cache_path)
+
+    return df[["preferredName_A", "preferredName_B", "score"]]
+
+
+def build_string_graph(
+    gene_list: list[str],
+    species: int = 9606,
+    threshold: int = DEFAULT_STRING_THRESHOLD,
+    cache_path: Optional[str | Path] = None,
+) -> tuple[sp.csr_matrix, np.ndarray, list[str]]:
+    """Build a confidence-weighted adjacency matrix from STRING interactions.
