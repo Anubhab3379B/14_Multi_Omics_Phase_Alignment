@@ -98,3 +98,23 @@ def build_string_graph(
     cache_path: Optional[str | Path] = None,
 ) -> tuple[sp.csr_matrix, np.ndarray, list[str]]:
     """Build a confidence-weighted adjacency matrix from STRING interactions.
+
+    Implements W = A ⊙ C (Hadamard product of adjacency × confidence matrix).
+    STRING combined score ∈ [0, 1000] is normalized to C ∈ [0, 1].
+
+    Parameters
+    ----------
+    gene_list : list[str]
+        Gene symbols to build graph over.
+    species : int
+        NCBI taxonomy ID.
+    threshold : int
+        Minimum STRING confidence score.
+    cache_path : str or Path or None
+        Cache path for the STRING response CSV.
+
+    Returns
+    -------
+    W : scipy.sparse.csr_matrix
+        Confidence-weighted symmetric adjacency matrix (n × n).
+    C : np.ndarray
