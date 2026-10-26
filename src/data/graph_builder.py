@@ -118,3 +118,23 @@ def build_string_graph(
     W : scipy.sparse.csr_matrix
         Confidence-weighted symmetric adjacency matrix (n × n).
     C : np.ndarray
+        Confidence matrix (dense, n × n), values in [0, 1].
+    gene_order : list[str]
+        Ordered list of genes corresponding to matrix rows/columns.
+    """
+
+    df = fetch_string_interactions(gene_list, species, threshold, cache_path)
+
+    gene_set = set(gene_list)
+    gene_order = sorted(gene_set)
+    gene_to_idx = {g: i for i, g in enumerate(gene_order)}
+    n = len(gene_order)
+
+    logger.info("Building STRING graph: %d genes", n)
+
+    rows, cols, data = [], [], []
+    for _, row in df.iterrows():
+        g_a = row["preferredName_A"]
+        g_b = row["preferredName_B"]
+        score = float(row["score"]) / 1000.0  # normalize to [0, 1]
+
