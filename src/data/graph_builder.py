@@ -138,3 +138,23 @@ def build_string_graph(
         g_b = row["preferredName_B"]
         score = float(row["score"]) / 1000.0  # normalize to [0, 1]
 
+        if g_a in gene_to_idx and g_b in gene_to_idx:
+            i, j = gene_to_idx[g_a], gene_to_idx[g_b]
+            # Symmetric
+            rows.extend([i, j])
+            cols.extend([j, i])
+            data.extend([score, score])
+
+    W = sp.csr_matrix((data, (rows, cols)), shape=(n, n))
+    C = W.toarray()
+
+    logger.info("  Graph: %d nodes, %d non-zero edges", n, W.nnz // 2)
+    return W, C, gene_order
+
+
+# ---------------------------------------------------------------------------
+# Graph Laplacian
+# ---------------------------------------------------------------------------
+
+def build_graph_laplacian(
+    W: sp.csr_matrix,
