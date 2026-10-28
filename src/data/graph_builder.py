@@ -158,3 +158,23 @@ def build_string_graph(
 
 def build_graph_laplacian(
     W: sp.csr_matrix,
+    normalize: bool = False,
+) -> sp.csr_matrix:
+    """Compute the graph Laplacian L_B = D - W.
+
+    The Laplacian is positive semi-definite for non-negative symmetric W.
+
+    Parameters
+    ----------
+    W : scipy.sparse.csr_matrix
+        Confidence-weighted symmetric adjacency matrix.
+    normalize : bool
+        If True, return the symmetric normalized Laplacian:
+        L_sym = D^{-1/2} L D^{-1/2} = I - D^{-1/2} W D^{-1/2}
+
+    Returns
+    -------
+    scipy.sparse.csr_matrix
+        Graph Laplacian L_B ≽ 0.
+    """
+    n = W.shape[0]
