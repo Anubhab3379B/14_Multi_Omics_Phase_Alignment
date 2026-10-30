@@ -178,3 +178,23 @@ def build_graph_laplacian(
         Graph Laplacian L_B ≽ 0.
     """
     n = W.shape[0]
+    degree = np.asarray(W.sum(axis=1)).flatten()
+    D = sp.diags(degree, format="csr")
+    L = D - W
+
+    if normalize:
+        # Symmetric normalized: L_sym = I - D^{-1/2} W D^{-1/2}
+        d_inv_sqrt = np.where(degree > 0, 1.0 / np.sqrt(degree), 0.0)
+        D_inv_sqrt = sp.diags(d_inv_sqrt, format="csr")
+        L = sp.eye(n) - D_inv_sqrt @ W @ D_inv_sqrt
+
+    logger.debug("Laplacian: shape=%s, nnz=%d", L.shape, L.nnz)
+    return L.tocsr()
+
+
+# ---------------------------------------------------------------------------
+# Save / Load
+# ---------------------------------------------------------------------------
+
+def save_graph(
+    W: sp.csr_matrix,
