@@ -198,3 +198,23 @@ def build_graph_laplacian(
 
 def save_graph(
     W: sp.csr_matrix,
+    gene_order: list[str],
+    path: str | Path,
+) -> None:
+    """Save the biological graph to a compressed NPZ archive.
+
+    Parameters
+    ----------
+    W : scipy.sparse.csr_matrix
+        Confidence-weighted adjacency.
+    gene_order : list[str]
+        Ordered gene names.
+    path : str or Path
+        Output path (will be created with .npz extension if needed).
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    sp.save_npz(str(path), W)
+    # Save gene order alongside
+    gene_path = path.with_suffix(".genes.txt")
+    gene_path.write_text("\n".join(gene_order), encoding="utf-8")
