@@ -218,3 +218,23 @@ def save_graph(
     # Save gene order alongside
     gene_path = path.with_suffix(".genes.txt")
     gene_path.write_text("\n".join(gene_order), encoding="utf-8")
+    logger.info("Saved graph: %s (%d × %d)", path, *W.shape)
+
+
+def load_graph(path: str | Path) -> tuple[sp.csr_matrix, list[str]]:
+    """Load a saved biological graph from NPZ + gene list.
+
+    Parameters
+    ----------
+    path : str or Path
+        Path to .npz file (gene list expected at same path with .genes.txt).
+
+    Returns
+    -------
+    W : scipy.sparse.csr_matrix
+    gene_order : list[str]
+    """
+    path = Path(path)
+    W = sp.load_npz(str(path))
+    gene_path = path.with_suffix(".genes.txt")
+    gene_order = gene_path.read_text(encoding="utf-8").strip().splitlines()
