@@ -238,3 +238,23 @@ def load_graph(path: str | Path) -> tuple[sp.csr_matrix, list[str]]:
     W = sp.load_npz(str(path))
     gene_path = path.with_suffix(".genes.txt")
     gene_order = gene_path.read_text(encoding="utf-8").strip().splitlines()
+    logger.info("Loaded graph: %d × %d, %d genes", *W.shape, len(gene_order))
+    return W, gene_order
+
+
+# ---------------------------------------------------------------------------
+# Subgraph extraction (restrict graph to HVG subset)
+# ---------------------------------------------------------------------------
+
+def restrict_graph_to_genes(
+    W: sp.csr_matrix,
+    full_gene_order: list[str],
+    target_genes: list[str],
+) -> tuple[sp.csr_matrix, np.ndarray, list[str]]:
+    """Restrict a full graph to a subset of target genes (e.g., HVGs).
+
+    Parameters
+    ----------
+    W : scipy.sparse.csr_matrix
+        Full gene × gene adjacency matrix.
+    full_gene_order : list[str]
