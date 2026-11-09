@@ -258,3 +258,23 @@ def restrict_graph_to_genes(
     W : scipy.sparse.csr_matrix
         Full gene × gene adjacency matrix.
     full_gene_order : list[str]
+        Gene names for the rows/columns of W.
+    target_genes : list[str]
+        Subset of genes to keep.
+
+    Returns
+    -------
+    W_sub : scipy.sparse.csr_matrix
+        Subgraph adjacency (|target| × |target|).
+    C_sub : np.ndarray
+        Dense confidence matrix for the subgraph.
+    kept_genes : list[str]
+        Genes actually retained (intersection of target_genes and full_gene_order).
+    """
+    full_idx = {g: i for i, g in enumerate(full_gene_order)}
+    kept = [(g, full_idx[g]) for g in target_genes if g in full_idx]
+
+    if not kept:
+        logger.warning("No target genes found in the graph — returning empty subgraph.")
+        return sp.csr_matrix((0, 0)), np.zeros((0, 0)), []
+
