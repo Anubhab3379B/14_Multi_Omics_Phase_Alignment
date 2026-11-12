@@ -278,3 +278,23 @@ def restrict_graph_to_genes(
         logger.warning("No target genes found in the graph — returning empty subgraph.")
         return sp.csr_matrix((0, 0)), np.zeros((0, 0)), []
 
+    kept_genes, idx = zip(*kept)
+    idx = list(idx)
+
+    W_dense = W.toarray()
+    W_sub = W_dense[np.ix_(idx, idx)]
+    logger.info(
+        "Subgraph: %d/%d genes retained, %d non-zero edges",
+        len(kept_genes), len(full_gene_order),
+        (W_sub > 0).sum() // 2,
+    )
+    return sp.csr_matrix(W_sub), W_sub, list(kept_genes)
+
+
+# ---------------------------------------------------------------------------
+# Section 8 Critique Resolution: ATAC Peak-to-Gene Mapping & Joint Graph
+# ---------------------------------------------------------------------------
+
+import re
+
+
